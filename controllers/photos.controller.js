@@ -13,7 +13,7 @@ exports.add = async (req, res) => {
       const fileName = file.path.split('/').slice(-1)[0]; // cut only filename from full path, e.g. C:/test/abc.jpg -> abc.jpg
       const fileExt = fileName.split('.').slice(-1)[0];
 
-      if (fileExt[1] === '.jpg' || '.png' || '.gif') {
+      if (fileExt === 'jpg' || fileExt === 'png' || fileExt === 'gif') {
         const newPhoto = new Photo({
           title,
           author,
@@ -22,7 +22,7 @@ exports.add = async (req, res) => {
           votes: 0
         });
         await newPhoto.save(); // ...save new photo in DB
-        res.json(newPhoto);
+        return res.json(newPhoto);
       } else {
         throw new Error('Wrong file type!');
       }
