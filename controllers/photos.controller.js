@@ -10,10 +10,26 @@ exports.add = async (req, res) => {
     if (title && author && email && file) {
       // if fields are not empty...
 
+      const titlePattern = new RegExp(/^[\p{L}'][ \p{L}'-]*[\p{L}]/gmu);
+      const authorPattern = new RegExp(/^[\p{L}'][ \p{L}'-]*[\p{L}]/gmu);
+      const emailPattern = new RegExp(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim);
+
       const fileName = file.path.split('/').slice(-1)[0]; // cut only filename from full path, e.g. C:/test/abc.jpg -> abc.jpg
       const fileExt = fileName.split('.').slice(-1)[0];
 
-      if (fileExt === 'jpg' || fileExt === 'png' || fileExt === 'gif') {
+      if (!titlePattern.test(title)) {
+        throw new Error('Invalid title');
+      }
+
+      if (!authorPattern.test(title)) {
+        throw new Error('Invalid author');
+      }
+
+      if (!emailPattern.test(email)) {
+        throw new Error('Invalid email');
+      }
+
+      if ((fileExt === 'jpg' || fileExt === 'png' || fileExt === 'gif') && title.length <= 25 && author.length <= 50) {
         const newPhoto = new Photo({
           title,
           author,
